@@ -1,0 +1,9 @@
+S0,X,Y1,Y2,A,B
+a,b,e
+S0 -> AY1 | BY2 | AA | BB | a | b | e
+X -> AY1 | BY2 | AA | BB | a | b
+Y1 -> XA
+Y2 -> XB
+A -> a
+B -> b
+S0
