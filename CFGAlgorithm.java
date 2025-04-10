@@ -109,28 +109,39 @@ public class CFGAlgorithm {
             }
         }
 
+        // 1. For w = ε, if S → ε is a rule, accept; else, reject. [[ w = ε case ]]
         if (n == 0) {
             ArrayList<String> startRules = getRulesForVariable(startVariable);
             return startRules.contains("e");
         }
 
+        // 2. For i = 1 to n: [[ examine each substring of length 1 ]]
         for (int i = 1; i <= n; i++) {
+            // 3. For each variable A:
             String symbol = String.valueOf(inputString.charAt(i - 1));
             for (String A : variables) {
+                // 4. Test whether A → b is a rule, where b = wi .
                 ArrayList<String> varRules = getRulesForVariable(A);
                 if (varRules.contains(symbol) && !table[i][i].contains(A)) {
+                    // 5. If so, place A in table(i, i).
                     table[i][i].add(A);
                 }
             }
         }
 
+        // 6. For l = 2 to n: [[ l is the length of the substring ]]
         for (int l = 2; l <= n; l++) {
+            // 7. For i = 1 to n − l + 1: [[ i is the start position of the substring ]]
             for (int i = 1; i <= n - l + 1; i++) {
+                // 8. Let j = i + l − 1. [[ j is the end position of the substring ]]
                 int j = i + l - 1;
+                // 9. For k = i to j − 1: [[ k is the split position ]]
                 for (int k = i; k < j; k++) {
+                    // 10. For each rule A → BC:
                     for (String A : variables) {
                         ArrayList<String> aRules = getRulesForVariable(A);
                         for (String production : aRules) {
+                            // 11. If table(i, k) contains B and table(k + 1, j) contains C, put A in table(i, j).
                             if (production.length() == 2 && variables.contains(String.valueOf(production.charAt(0)))
                                     && variables.contains(String.valueOf(production.charAt(1)))) {
                                 String B = String.valueOf(production.charAt(0));
@@ -145,6 +156,7 @@ public class CFGAlgorithm {
             }
         }
 
+        // 12. If S is in table(1, n), accept; else, reject.”
         return table[1][n].contains(startVariable);
     }
 

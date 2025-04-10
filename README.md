@@ -13,3 +13,15 @@ Grammars Files:
 
 Algorithm File:
 - CFGAlgorithm.java
+
+Running Code:
+- Language: Java
+- javac CFGAlgorithm.java (for compiling code)
+
+Copy the following for testing each of the grammars:
+
+- java CFGAlgorithm astarGrammar.txt astarGrammarInput.txt (testing astar grammar)
+- java CFGAlgorithm anbnGrammar.txt anbnGrammarInput.txt (testing anbn grammar)
+- java CFGAlgorithm palindromeGrammar.txt palindromeGrammarInput.txt (testing palindrome grammar)
+- java CFGAlgorithm equalAsBsGrammar.txt equalAsBsGrammarInput.txt (testing equal a's and b's grammar)
+
