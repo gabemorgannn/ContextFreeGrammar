@@ -1,8 +1,8 @@
-X, Y, Z, A, B
+S, X, Y, A, B
 a, b
-X -> AY | BZ | AA | BB | a | b
-Y -> XA
-Z -> XB
+S -> AX | BY | AA | BB | a | b
+X -> SA
+Y -> SB
 A -> a
 B -> b
-X
+S

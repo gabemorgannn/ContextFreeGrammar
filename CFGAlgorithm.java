@@ -24,11 +24,11 @@ import java.util.*;
 
 public class CFGAlgorithm {
 
-    static ArrayList<String> variables = new ArrayList<>();
-    static ArrayList<String> terminals = new ArrayList<>();
-    static ArrayList<ArrayList<String>> rules = new ArrayList<>();
-    static ArrayList<String> ruleVariables = new ArrayList<>(); // Stores the LHS variable for each rule
-    static String startVariable = "";
+    static ArrayList<String> variables = new ArrayList<>(); // Non-terminal variables.
+    static ArrayList<String> terminals = new ArrayList<>(); // Terminal symbols.
+    static ArrayList<ArrayList<String>> rules = new ArrayList<>(); // Production rules.
+    static ArrayList<String> ruleVariables = new ArrayList<>(); // LHS variable for each rule.
+    static String startVariable = ""; // Start variable.
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -41,6 +41,13 @@ public class CFGAlgorithm {
         testInputStrings(args[1]);
     }
 
+    /**
+     * Parses the grammar from the given file.
+     * Identifies variables, terminals, rules, and the start variable.
+     *
+     * @param grammarFile File containing the grammar.
+     * @throws IOException If file reading fails.
+     */
     static void parseGrammar(String grammarFile) throws IOException {
         Scanner scanner = new Scanner(new File(grammarFile));
         int lineNumber = 1;
@@ -50,11 +57,11 @@ public class CFGAlgorithm {
             if (line.isEmpty()) continue;
 
             if (lineNumber == 1) {
-                variables.addAll(Arrays.asList(line.split(",\\s*")));
+                variables.addAll(Arrays.asList(line.split(",\\s*"))); // Get variables.
             } else if (lineNumber == 2) {
-                terminals.addAll(Arrays.asList(line.split(",\\s*")));
+                terminals.addAll(Arrays.asList(line.split(",\\s*"))); // Get terminals.
             } else if (!line.contains("->")) {
-                startVariable = line;
+                startVariable = line; // Identify start variable.
             } else {
                 String[] parts = line.split("->");
                 String lhs = parts[0].trim();
@@ -69,7 +76,7 @@ public class CFGAlgorithm {
                 for (String rhs : rhsParts) {
                     ArrayList<String> production = new ArrayList<>(Arrays.asList(rhs.trim().split("\\s+"))); // Split by spaces
                     rules.add(production);
-                    ruleVariables.add(lhs);
+                    ruleVariables.add(lhs); // Map LHS variable to the rule.
                 }
             }
             lineNumber++;
@@ -77,6 +84,9 @@ public class CFGAlgorithm {
         scanner.close();
     }
 
+    /**
+     * Prints the parsed grammar.
+     */
     static void printGrammar() {
         System.out.println("Variables: " + String.join(", ", variables));
         System.out.println("Terminals: " + String.join(", ", terminals));
@@ -88,6 +98,12 @@ public class CFGAlgorithm {
         System.out.println();
     }
 
+    /**
+     * Tests input strings against the grammar.
+     *
+     * @param inputFile File containing input strings.
+     * @throws IOException If file reading fails.
+     */
     static void testInputStrings(String inputFile) throws IOException {
         Scanner scanner = new Scanner(new File(inputFile));
         while (scanner.hasNextLine()) {
@@ -99,9 +115,16 @@ public class CFGAlgorithm {
         scanner.close();
     }
 
+    /**
+     * Implements Sipser's CYK algorithm to check string membership.
+     *
+     * @param inputString String to check.
+     * @return True if the string is in the language, false otherwise.
+     */
     static boolean isStringInLanguage(String inputString) {
         int n = inputString.length();
         ArrayList<String>[][] table = new ArrayList[n + 1][n + 1];
+
 
         for (int i = 0; i <= n; i++) {
             for (int j = 0; j <= n; j++) {
@@ -109,11 +132,13 @@ public class CFGAlgorithm {
             }
         }
 
+
         // 1. For w = ε, if S → ε is a rule, accept; else, reject. [[ w = ε case ]]
         if (n == 0) {
             ArrayList<String> startRules = getRulesForVariable(startVariable);
             return startRules.contains("e");
         }
+
 
         // 2. For i = 1 to n: [[ examine each substring of length 1 ]]
         for (int i = 1; i <= n; i++) {
@@ -160,6 +185,12 @@ public class CFGAlgorithm {
         return table[1][n].contains(startVariable);
     }
 
+    /**
+     * Gets all rules for a given variable.
+     *
+     * @param variable The variable.
+     * @return List of rules.
+     */
     static ArrayList<String> getRulesForVariable(String variable) {
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < rules.size(); i++) {
