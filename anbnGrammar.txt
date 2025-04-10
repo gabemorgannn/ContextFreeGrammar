@@ -1,0 +1,8 @@
+S, X, Y, A, B
+a, b
+S -> AY | AB
+X -> AY | AB
+Y -> XB
+A -> a
+B -> b
+S

@@ -1,9 +1,8 @@
-S0,X,Y1,Y2,A,B
-a,b,e
-S0 -> AY1 | BY2 | AA | BB | a | b | e
-X -> AY1 | BY2 | AA | BB | a | b
-Y1 -> XA
-Y2 -> XB
+X, Y, Z, A, B
+a, b
+X -> AY | BZ | AA | BB | a | b
+Y -> XA
+Z -> XB
 A -> a
 B -> b
-S0
+X
