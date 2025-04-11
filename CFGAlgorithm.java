@@ -4,26 +4,29 @@ import java.util.*;
 
 public class CFGAlgorithm {
 
-    static ArrayList<String> variables = new ArrayList<>(); // Non-terminal variables.
-    static ArrayList<String> terminals = new ArrayList<>(); // Terminal symbols.
-    static ArrayList<ArrayList<String>> rules = new ArrayList<>(); // Production rules.
-    static ArrayList<String> ruleVariables = new ArrayList<>(); // LHS variable for each rule.
-    static String startVariable = ""; // Start variable set to empty cause unknown at start.
+    static ArrayList<String> variables = new ArrayList<>(); // non-terminals 
+    static ArrayList<String> terminals = new ArrayList<>(); // terminals 
+    static ArrayList<ArrayList<String>> rules = new ArrayList<>(); // oroduction rules
+    static ArrayList<String> ruleVariables = new ArrayList<>(); // LHS variable for each rule
+    static String startVariable = ""; // start variable set to empty cause unknown at start
 
     public static void main(String[] args) throws IOException {
+        // checks for 2 command line arguments when testing the grammar file and input file
         if (args.length != 2) {
             System.out.println("Usage: java CFGTest <grammarFile> <inputFile>");
             return;
         }
-
+        // parsing the grammar file
         parseGrammar(args[0]);
+        // print grammar for debug
         printGrammar();
+        //test input
         testInputStrings(args[1]);
     }
 
     /**
-     * Parses the grammar from the given file.
-     * Identifies variables, terminals, rules, and the start variable.
+     * parses the grammar from the given file.
+     * identifies variables, terminals, rules, and the start variable.
      *
      * @param grammarFile File containing the grammar.
      * @throws IOException If file reading fails.
@@ -32,24 +35,26 @@ public class CFGAlgorithm {
     static void parseGrammar(String grammarFile) throws IOException {
         Scanner scanner = new Scanner(new File(grammarFile));
         int lineNumber = 1;
-
+        // loop through the file until no more lines
         while (scanner.hasNextLine()) {
+            // the following if statements define the variables, terminals, start
             String line = scanner.nextLine().trim();
             if (line.isEmpty()) continue;
 
             if (lineNumber == 1) {
-                variables.addAll(Arrays.asList(line.split(","))); // Get variables.
+                variables.addAll(Arrays.asList(line.split(","))); // get variables. https://docs.oracle.com/javase/8/docs/api/java/util/Arrays.html for asList
             } else if (lineNumber == 2) {
-                terminals.addAll(Arrays.asList(line.split(","))); // Get terminals.
+                terminals.addAll(Arrays.asList(line.split(","))); // get terminals.
             } else if (!line.contains("->")) {
-                startVariable = line; // Identify start variable.
+                startVariable = line; // identify start.
+                //else breaks down grammar into it's components
             } else {
-                String[] ruleSplit = line.split("->");
+                String[] ruleSplit = line.split("->"); // https://www.w3schools.com/java/ref_string_split.asp 
                 String lhs = ruleSplit[0].trim();
-                String[] rhsComponents = ruleSplit[1].trim().split("\\|");
+                String[] rhsComponents = ruleSplit[1].trim().split("\\|"); // https://www.w3schools.com/java/ref_string_trim.asp 
 
                 int lhsIndex = variables.indexOf(lhs);
-                if (lhsIndex == -1) {
+                if (lhsIndex == -1) { // https://www.w3schools.com/java/ref_string_indexof.asp 
                     variables.add(lhs);
                     lhsIndex = variables.size() - 1;
                 }
@@ -57,7 +62,7 @@ public class CFGAlgorithm {
                 for (String rhs : rhsComponents) {
                     ArrayList<String> production = new ArrayList<>(Arrays.asList(rhs.trim().split("\\s+"))); // Split by spaces
                     rules.add(production);
-                    ruleVariables.add(lhs); // Map LHS variable to the rule.
+                    ruleVariables.add(lhs); // map LHS variable to the rule.
                 }
             }
             lineNumber++;
@@ -66,7 +71,7 @@ public class CFGAlgorithm {
     }
 
     /**
-     * Prints the parsed grammar to ensure that the grammar is being interpretted correctly.
+     * prints the parsed grammar to ensure that the grammar is being interpretted correctly.
      */
     static void printGrammar() {
         System.out.println("Variables: " + String.join(", ", variables));
@@ -80,13 +85,14 @@ public class CFGAlgorithm {
     }
 
     /**
-     * Gets all rules for a given variable.
+     * gets all rules for a given variable.
      *
-     * @param variable The variable.
-     * @return List of rules.
+     * @param variable the variable.
+     * @return list of rules.
      */
     static ArrayList<String> getRulesForVariable(String variable) {
         ArrayList<String> result = new ArrayList<>();
+        // loops through from i and gets all the rules and stores in an array list rule.
         for (int i = 0; i < rules.size(); i++) {
             if (ruleVariables.get(i).equals(variable)) {
                 result.addAll(rules.get(i));
@@ -96,7 +102,7 @@ public class CFGAlgorithm {
     }
 
     /**
-     * Implements Sipser's CYK algorithm to check string membership.
+     * implements Sipser's CYK algorithm to check string membership.
      *
      * @param inputString String to check.
      * @return True if the string is in the language, false otherwise.
@@ -105,7 +111,7 @@ public class CFGAlgorithm {
         int n = inputString.length();
         ArrayList<String>[][] table = new ArrayList[n + 1][n + 1];
 
-
+        //initializing table
         for (int i = 0; i <= n; i++) {
             for (int j = 0; j <= n; j++) {
                 table[i][j] = new ArrayList<>();
@@ -166,10 +172,10 @@ public class CFGAlgorithm {
     }
 
     /**
-     * Tests input strings against the grammar.
+     * tests input strings against the grammar.
      *
-     * @param inputFile File containing input strings.
-     * @throws IOException If file reading fails.
+     * @param inputFile file containing input strings.
+     * @throws IOException if file reading fails.
      */
     static void testInputStrings(String inputFile) throws IOException {
         Scanner scanner = new Scanner(new File(inputFile));
