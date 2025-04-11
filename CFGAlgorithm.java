@@ -19,7 +19,7 @@ public class CFGAlgorithm {
         // parsing the grammar file
         parseGrammar(args[0]);
         // print grammar for debug
-        printGrammar();
+        debugGrammar();
         //test input
         testInputStrings(args[1]);
     }
@@ -34,16 +34,16 @@ public class CFGAlgorithm {
     //https://lazeecoder.medium.com/event-driven-context-free-grammar-cfg-parsing-66298c0f1ef7  gave us idea for LHS and RHS
     static void parseGrammar(String grammarFile) throws IOException {
         Scanner scanner = new Scanner(new File(grammarFile));
-        int lineNumber = 1;
+        int currentLine = 1;
         // loop through the file until no more lines
         while (scanner.hasNextLine()) {
             // the following if statements define the variables, terminals, start
             String line = scanner.nextLine().trim();
             if (line.isEmpty()) continue;
 
-            if (lineNumber == 1) {
+            if (currentLine == 1) {
                 variables.addAll(Arrays.asList(line.split(","))); // get variables. https://docs.oracle.com/javase/8/docs/api/java/util/Arrays.html for asList
-            } else if (lineNumber == 2) {
+            } else if (currentLine == 2) {
                 terminals.addAll(Arrays.asList(line.split(","))); // get terminals.
             } else if (!line.contains("->")) {
                 startVariable = line; // identify start.
@@ -65,7 +65,7 @@ public class CFGAlgorithm {
                     ruleVariables.add(lhs); // map LHS variable to the rule.
                 }
             }
-            lineNumber++;
+            currentLine++;
         }
         scanner.close();
     }
@@ -73,7 +73,7 @@ public class CFGAlgorithm {
     /**
      * prints the parsed grammar to ensure that the grammar is being interpretted correctly.
      */
-    static void printGrammar() {
+    static void debugGrammar() {
         System.out.println("Variables: " + String.join(", ", variables));
         System.out.println("Terminals: " + String.join(", ", terminals));
         System.out.println("Rules:");
