@@ -25,11 +25,11 @@ public class CFGAlgorithm {
     }
 
     /**
-     * parses the grammar from the given file.
+     * parses the grammr from the given file.
      * identifies variables, terminals, rules, and the start variable.
      *
-     * @param grammarFile File containing the grammar.
-     * @throws IOException If file reading fails.
+     * @param grammarFile file containing the grammar.
+     * @throws IOException if file reading fails.
      */
     //https://lazeecoder.medium.com/event-driven-context-free-grammar-cfg-parsing-66298c0f1ef7  gave us idea for LHS and RHS
     static void parseGrammar(String grammarFile) throws IOException {
@@ -92,7 +92,7 @@ public class CFGAlgorithm {
      */
     static ArrayList<String> getRulesForVariable(String variable) {
         ArrayList<String> result = new ArrayList<>();
-        // loops through from i and gets all the rules and stores in an array list rule.
+        // loop through from i and gets all the rules and stores in an array list rule.
         for (int i = 0; i < rules.size(); i++) {
             if (ruleVariables.get(i).equals(variable)) {
                 result.addAll(rules.get(i));
@@ -102,10 +102,10 @@ public class CFGAlgorithm {
     }
 
     /**
-     * implements Sipser's CYK algorithm to check string membership.
+     * implements Sipser algorithm to check string.
      *
-     * @param inputString String to check.
-     * @return True if the string is in the language, false otherwise.
+     * @param inputString string to check.
+     * @return true if the string is in the language, false otherwise.
      */
     static boolean sispersAlgorithm(String inputString) {
         int n = inputString.length();
@@ -119,40 +119,40 @@ public class CFGAlgorithm {
         }
 
 
-        // 1. For w = ε, if S → ε is a rule, accept; else, reject. [[ w = ε case ]]
+        // 1. For w = e, if S -> e is a rule, accept; else, reject. [ w = e case ]
         if (n == 0) {
             ArrayList<String> startRules = getRulesForVariable(startVariable);
             return startRules.contains("e");
         }
 
 
-        // 2. For i = 1 to n: [[ examine each substring of length 1 ]]
+        // 2. For i = 1 to n: [ examine each substring of length 1 ]
         for (int i = 1; i <= n; i++) {
             // 3. For each variable A:
             String symbol = String.valueOf(inputString.charAt(i - 1));
             for (String A : variables) {
-                // 4. Test whether A → b is a rule, where b = wi .
+                // 4. Test whether A -> b is a rule
                 ArrayList<String> varRules = getRulesForVariable(A);
                 if (varRules.contains(symbol) && !table[i][i].contains(A)) {
-                    // 5. If so, place A in table(i, i).
+                    // 5. If so, place A in table(i, i)
                     table[i][i].add(A);
                 }
             }
         }
 
-        // 6. For l = 2 to n: [[ l is the length of the substring ]]
+        // 6. For l = 2 to n: [l is the length of the substring ]
         for (int l = 2; l <= n; l++) {
-            // 7. For i = 1 to n − l + 1: [[ i is the start position of the substring ]]
+            // 7. For i = 1 to n − l + 1: [ i is the start position of the substring ]
             for (int i = 1; i <= n - l + 1; i++) {
-                // 8. Let j = i + l − 1. [[ j is the end position of the substring ]]
+                // 8. Let j = i + l − 1. [ j is the end position of the substring ]
                 int j = i + l - 1;
-                // 9. For k = i to j − 1: [[ k is the split position ]]
+                // 9. For k = i to j − 1: [ k is the split position ]
                 for (int k = i; k < j; k++) {
-                    // 10. For each rule A → BC:
+                    // 10. For each rule A -> BC:
                     for (String A : variables) {
                         ArrayList<String> aRules = getRulesForVariable(A);
                         for (String production : aRules) {
-                            // 11. If table(i, k) contains B and table(k + 1, j) contains C, put A in table(i, j).
+                            // 11. If table(i, k) contains B and table(k + 1, j) contains C, put A in table(i, j)
                             if (production.length() == 2 && variables.contains(String.valueOf(production.charAt(0)))
                                     && variables.contains(String.valueOf(production.charAt(1)))) {
                                 String B = String.valueOf(production.charAt(0));
@@ -167,15 +167,15 @@ public class CFGAlgorithm {
             }
         }
 
-        // 12. If S is in table(1, n), accept; else, reject.”
+        // 12. If S is in table(1, n), accept; else, rject
         return table[1][n].contains(startVariable);
     }
 
     /**
-     * tests input strings against the grammar.
+     * tests input strings with the grammar.
      *
      * @param inputFile file containing input strings.
-     * @throws IOException if file reading fails.
+     * @throws IOException if file readng fails.
      */
     static void testInputStrings(String inputFile) throws IOException {
         Scanner scanner = new Scanner(new File(inputFile));
