@@ -9,6 +9,7 @@ aaabbb
 aabbab
 ababba
 bbbaaa
+
 a
 b
 aaa

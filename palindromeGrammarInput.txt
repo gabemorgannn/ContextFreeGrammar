@@ -8,6 +8,8 @@ abba
 baab
 babab
 ababa
+bbbabbb
+
 ab
 ba
 abc
@@ -18,3 +20,4 @@ abcba
 cabac
 abccba
 aabb
+aaabb
