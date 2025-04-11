@@ -1,3 +1,12 @@
+/**
+ * In this assignment you will get hands-on practice with designing grammars, and then designing programs 
+ * that can use a grammar to parse and filter strings. This project will also reinforce what you have been
+ * learning about data structures and algorithms in your other classes.
+ * 
+ * @author Matthew Swandal, Last Modified 4/10/25
+ * @author Gabriel Morgan, Last Modified 4/10/25
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
