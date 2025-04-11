@@ -105,7 +105,7 @@ public class CFGAlgorithm {
      * implements Sipser algorithm to check string.
      *
      * @param inputString string to check.
-     * @return true if the string is in the language, false otherwise.
+     * @return true if the string is in the language else false
      */
     static boolean sispersAlgorithm(String inputString) {
         int n = inputString.length();
