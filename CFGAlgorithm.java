@@ -1,3 +1,4 @@
+// Sispers Algorithm for Implementation
 // PROOF The following algorithm D implements the proof idea. Let G be
 // a CFG in Chomsky normal form generating the CFL L. Assume that S is the
 // start variable. (Recall that the empty string is handled specially in a Chomsky
@@ -28,7 +29,7 @@ public class CFGAlgorithm {
     static ArrayList<String> terminals = new ArrayList<>(); // Terminal symbols.
     static ArrayList<ArrayList<String>> rules = new ArrayList<>(); // Production rules.
     static ArrayList<String> ruleVariables = new ArrayList<>(); // LHS variable for each rule.
-    static String startVariable = ""; // Start variable.
+    static String startVariable = ""; // Start variable set to empty cause unknown at start.
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -48,6 +49,7 @@ public class CFGAlgorithm {
      * @param grammarFile File containing the grammar.
      * @throws IOException If file reading fails.
      */
+    //https://lazeecoder.medium.com/event-driven-context-free-grammar-cfg-parsing-66298c0f1ef7  gave us idea for LHS and RHS
     static void parseGrammar(String grammarFile) throws IOException {
         Scanner scanner = new Scanner(new File(grammarFile));
         int lineNumber = 1;
@@ -59,13 +61,13 @@ public class CFGAlgorithm {
             if (lineNumber == 1) {
                 variables.addAll(Arrays.asList(line.split(","))); // Get variables.
             } else if (lineNumber == 2) {
-                terminals.addAll(Arrays.asList(line.split(",*"))); // Get terminals.
+                terminals.addAll(Arrays.asList(line.split(","))); // Get terminals.
             } else if (!line.contains("->")) {
                 startVariable = line; // Identify start variable.
             } else {
-                String[] parts = line.split("->");
-                String lhs = parts[0].trim();
-                String[] rhsParts = parts[1].trim().split("\\|");
+                String[] ruleSplit = line.split("->");
+                String lhs = ruleSplit[0].trim();
+                String[] rhsComponents = ruleSplit[1].trim().split("\\|");
 
                 int lhsIndex = variables.indexOf(lhs);
                 if (lhsIndex == -1) {
@@ -73,7 +75,7 @@ public class CFGAlgorithm {
                     lhsIndex = variables.size() - 1;
                 }
 
-                for (String rhs : rhsParts) {
+                for (String rhs : rhsComponents) {
                     ArrayList<String> production = new ArrayList<>(Arrays.asList(rhs.trim().split("\\s+"))); // Split by spaces
                     rules.add(production);
                     ruleVariables.add(lhs); // Map LHS variable to the rule.
@@ -85,7 +87,7 @@ public class CFGAlgorithm {
     }
 
     /**
-     * Prints the parsed grammar.
+     * Prints the parsed grammar to ensure that the grammar is being interpretted correctly.
      */
     static void printGrammar() {
         System.out.println("Variables: " + String.join(", ", variables));
@@ -99,20 +101,19 @@ public class CFGAlgorithm {
     }
 
     /**
-     * Tests input strings against the grammar.
+     * Gets all rules for a given variable.
      *
-     * @param inputFile File containing input strings.
-     * @throws IOException If file reading fails.
+     * @param variable The variable.
+     * @return List of rules.
      */
-    static void testInputStrings(String inputFile) throws IOException {
-        Scanner scanner = new Scanner(new File(inputFile));
-        while (scanner.hasNextLine()) {
-            String input = scanner.nextLine().trim();
-            if (input.isEmpty()) input = "e"; // empty line = epsilon
-            boolean accepted = isStringInLanguage(input);
-            System.out.println(input + ": " + (accepted ? "Accept" : "Reject"));
+    static ArrayList<String> getRulesForVariable(String variable) {
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 0; i < rules.size(); i++) {
+            if (ruleVariables.get(i).equals(variable)) {
+                result.addAll(rules.get(i));
+            }
         }
-        scanner.close();
+        return result;
     }
 
     /**
@@ -121,7 +122,7 @@ public class CFGAlgorithm {
      * @param inputString String to check.
      * @return True if the string is in the language, false otherwise.
      */
-    static boolean isStringInLanguage(String inputString) {
+    static boolean sispersAlgorithm(String inputString) {
         int n = inputString.length();
         ArrayList<String>[][] table = new ArrayList[n + 1][n + 1];
 
@@ -186,32 +187,20 @@ public class CFGAlgorithm {
     }
 
     /**
-     * Gets all rules for a given variable.
+     * Tests input strings against the grammar.
      *
-     * @param variable The variable.
-     * @return List of rules.
+     * @param inputFile File containing input strings.
+     * @throws IOException If file reading fails.
      */
-    static ArrayList<String> getRulesForVariable(String variable) {
-        ArrayList<String> result = new ArrayList<>();
-        for (int i = 0; i < rules.size(); i++) {
-            if (ruleVariables.get(i).equals(variable)) {
-                result.addAll(rules.get(i));
-            }
+    static void testInputStrings(String inputFile) throws IOException {
+        Scanner scanner = new Scanner(new File(inputFile));
+        while (scanner.hasNextLine()) {
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) input = "e"; // empty line = epsilon
+            boolean accepted = sispersAlgorithm(input);
+            System.out.println(input + ": " + (accepted ? "Accept" : "Reject"));
         }
-        return result;
+        scanner.close();
     }
 }
 
-// # Test the original astar grammar
-// java CFGAlgorithm astarGrammar.txt astarGrammarInput.txt
-
-// # Test the anbn grammar
-// java CFGAlgorithm anbnGrammar.txt anbnGrammarInput.txt
-
-// # Test the palindrome grammar
-// java CFGAlgorithm palindromeGrammar.txt palindromeGrammarInput.txt
-
-// # Test the equalAsBs grammar
-// java CFGAlgorithm equalAsBsGrammar.txt equalAsBsGrammarInput.txt
-
-//https://lazeecoder.medium.com/event-driven-context-free-grammar-cfg-parsing-66298c0f1ef7 
