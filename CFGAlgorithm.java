@@ -57,9 +57,9 @@ public class CFGAlgorithm {
             if (line.isEmpty()) continue;
 
             if (lineNumber == 1) {
-                variables.addAll(Arrays.asList(line.split(",\\s*"))); // Get variables.
+                variables.addAll(Arrays.asList(line.split(","))); // Get variables.
             } else if (lineNumber == 2) {
-                terminals.addAll(Arrays.asList(line.split(",\\s*"))); // Get terminals.
+                terminals.addAll(Arrays.asList(line.split(",*"))); // Get terminals.
             } else if (!line.contains("->")) {
                 startVariable = line; // Identify start variable.
             } else {
